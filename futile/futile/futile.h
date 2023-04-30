@@ -37,12 +37,20 @@ namespace futile
             }
 
             StringT str;
-            str.resize(fileSize);
+            str.resize(fileSize / sizeof(CharT));
 
             if (Read((void *)str.data(), fileSize) == -1)
                 throw std::runtime_error("Failed to read file");
 
             return str;
+        }
+
+        template <class StringT, class CharT = typename StringT::value_type>
+        void Write(const StringT &str)
+        {
+            size_t ss = Write((char *)str.data(), str.size() * sizeof(char));
+            if (ss == -1)
+                throw std::runtime_error("Failed to write file");
         }
 
         inline size_t read(void *buf, size_t size) { return Read(buf, size); }
@@ -54,6 +62,13 @@ namespace futile
         {
             return Read<StringT>();
         }
+
+        template <class StringT>
+        void write(const StringT& str)
+        {
+            return Write<StringT>(str);
+        }
+
 
     private:
         FILE *mHandle;
