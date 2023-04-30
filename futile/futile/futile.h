@@ -7,11 +7,13 @@ namespace futile
 {
     namespace fs = std::filesystem;
 
+    constexpr auto kDefaultFileOpenType = "r";
+
     class File
     {
     public:
         File() : mHandle(nullptr) {}
-        File(const fs::path &path, const char *rr = "r");
+        File(const fs::path &path, const char *rr = kDefaultFileOpenType);
         File(const File &other) = delete;
         File(File &&other) : mHandle(other.mHandle) { other.mHandle = nullptr; }
 
@@ -38,14 +40,14 @@ namespace futile
             str.resize(fileSize);
 
             if (Read((void *)str.data(), fileSize) == -1)
-                throw std::runtime_error("Failed read file");
+                throw std::runtime_error("Failed to read file");
 
             return str;
         }
 
-        size_t read(void *buf, size_t size);
-        size_t write(const void *buf, size_t size);
-        size_t size();
+        inline size_t read(void *buf, size_t size) { return Read(buf, size); }
+        inline size_t write(const void *buf, size_t size) { return Write(buf, size); }
+        inline size_t size() { return Size(); }
 
         template <class StringT>
         StringT read()
@@ -57,7 +59,7 @@ namespace futile
         FILE *mHandle;
     };
 
-    File Open(const fs::path &path, const char *rr = "r");
-    File open(const fs::path &path, const char *rr = "r");
+    File Open(const fs::path &path, const char *rr = kDefaultFileOpenType);
+    inline File open(const fs::path &path, const char *rr = kDefaultFileOpenType) { return Open(path, rr); }
 
 } // namespace futile
