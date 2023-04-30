@@ -46,11 +46,11 @@ namespace futile
             std::fclose(mHandle);
     }
 
-    size_t File::Read(void *buf, size_t size) { return std::fread(buf, 1, size, mHandle); }
-    size_t File::Write(const void *buf, size_t size) { return std::fwrite(buf, 1, size, mHandle); }
-    size_t File::Size() { return FileSize(mHandle); }
+    size_t File::read(void *buf, size_t size) { return std::fread(buf, 1, size, mHandle); }
+    size_t File::write(const void *buf, size_t size) { return std::fwrite(buf, 1, size, mHandle); }
+    size_t File::size() { return FileSize(mHandle); }
 
-    File Open(const fs::path &path, const char *rr)
+    File open(const fs::path &path, const char *rr)
     {
         File ff(path, rr);
         return ff;
