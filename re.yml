@@ -1,2 +1,4 @@
 type: project
 name: "futile-project"
+
+сxx-standard: latest 

@@ -1,2 +1,6 @@
 type: static-library
 name: ".futile"
+
+deps:
+  - global:k2rate/ulib [/ulib]
+  - global:k2rate/ulib-fmt [/ulib-fmt]
