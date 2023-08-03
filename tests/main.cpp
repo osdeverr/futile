@@ -6,10 +6,10 @@ int main()
 {
     try
     {
-        auto ky = futile::open("test.txt").read<std::string>();
-        futile::open("ky.txt", "w").write(ky);
-
-        std::cout << ky << std::endl;
+        for (auto &line : futile::open("test.txt").lines())
+        {
+            std::cout << "Line: " << line << "\n";
+        }
     }
     catch (const std::exception &ex)
     {
