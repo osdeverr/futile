@@ -2,5 +2,5 @@ type: static-library
 name: ".futile"
 
 deps:
-  - github:k2rate/ulib ^2.4.3 [/ulib]
-  - github:k2rate/ulib-fmt ^2.0.2 [/ulib-fmt]
+  - github:k2rate/ulib ^3.0.0 [/ulib]
+  - github:k2rate/ulib-fmt ^3.0.0 [/ulib-fmt]

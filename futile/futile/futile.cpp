@@ -5,6 +5,8 @@
 #include "futile.h"
 
 #include <ulib/format.h>
+#include <ulib/fmt/path.h>
+
 #include <ulib/wchar.h>
 
 namespace futile
