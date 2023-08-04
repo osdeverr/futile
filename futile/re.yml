@@ -1,6 +1,6 @@
 type: static-library
-name: ".futile"
+name: futile
 
 deps:
-  - github:k2rate/ulib ^3.0.0 [/ulib]
-  - github:k2rate/ulib-fmt ^3.0.0 [/ulib-fmt]
+  - github:k2rate/ulib ^4.0.0 [/ulib]
+  - github:k2rate/ulib-fmt ^3.1.0 [/ulib-fmt]

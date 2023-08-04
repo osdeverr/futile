@@ -1,5 +1,13 @@
 type: executable
-name: ".tests"
+name: .tests
+
+platform.windows:
+  deps:
+    - vcpkg:gtest @ static-md
+
+platform.!windows:
+  deps:
+    - vcpkg:gtest
 
 deps:
-  - .futile
+  - futile

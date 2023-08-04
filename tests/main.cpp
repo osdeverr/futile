@@ -1,18 +1,7 @@
-#include <iostream>
+#include <gtest/gtest.h>
 
-#include <futile/futile.h>
-
-int main()
+int main(int argc, char **argv)
 {
-    try
-    {
-        for (auto &line : futile::open("test.txt").lines())
-        {
-            std::cout << "Line: " << line << "\n";
-        }
-    }
-    catch (const std::exception &ex)
-    {
-        std::cout << ex.what() << std::endl;
-    }
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

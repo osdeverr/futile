@@ -1,9 +1,7 @@
 #pragma once
+
 #include <cstdio>
 #include <filesystem>
-#include <vector>
-
-#include <string_view>
 
 #include <ulib/encodings/convert.h>
 #include <ulib/split.h>
@@ -12,7 +10,6 @@
 namespace futile
 {
     namespace fs = std::filesystem;
-
     constexpr auto kDefaultFileOpenType = "r";
 
     class File
@@ -29,7 +26,20 @@ namespace futile
         size_t write(const void *buf, size_t size);
         size_t size();
 
-        template <class StringT = std::string>
+        void close();
+
+        File &operator=(File &&other)
+        {
+            if (mHandle)
+                fclose_unsafe();
+
+            mHandle = other.mHandle;
+            other.mHandle = nullptr;
+
+            return *this;
+        }
+
+        template <class StringT = ulib::string>
         StringT read()
         {
             using CharT = typename StringT::value_type;
@@ -51,27 +61,38 @@ namespace futile
             return str;
         }
 
-        template <class StringT, class CharT = typename StringT::value_type>
+        template <class StringT, class EncodingT = ulib::argument_encoding_or_die_t<StringT>>
         void write(const StringT &str)
         {
-            size_t ss = write((char *)str.data(), str.size() * sizeof(char));
+            ulib::EncodedStringView<EncodingT> view = str;
+
+            size_t ss = write(view.data(), view.size_in_bytes());
             if (ss == -1)
                 throw std::runtime_error("Failed to write file");
         }
 
-        template <class StringT = std::string, class ContainerT = std::vector<StringT>>
+        void write(ulib::buffer_view view)
+        {
+            size_t ss = write(view.data(), view.size_in_bytes());
+            if (ss == -1)
+                throw std::runtime_error("Failed to write file");
+        }
+
+        template <class StringT = ulib::string, class ContainerT = ulib::List<StringT>,
+                  class EncodingT = ulib::string_encoding_t<StringT>,
+                  std::enable_if_t<!std::is_same_v<EncodingT, void>, bool> = true>
         ContainerT lines()
         {
-            using value_type = typename StringT::value_type;
+            auto lineBreak = ulib::Convert<EncodingT>(u8"\n");
+            auto contents = read<StringT>();
 
-            std::basic_string<value_type> contents = read<StringT>();
-            std::basic_string<value_type> line_break = ulib::Convert<ulib::LiteralEncodingT<value_type>>(u8"\n");
-
-            auto split = ulib::split(contents, line_break);
+            auto split = ulib::split(contents, lineBreak);
             return ContainerT{split.begin(), split.end()};
         }
 
     private:
+        void fclose_unsafe();
+
         FILE *mHandle;
     };
 

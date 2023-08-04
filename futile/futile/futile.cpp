@@ -4,14 +4,14 @@
 
 #include "futile.h"
 
-#include <ulib/format.h>
 #include <ulib/fmt/path.h>
+#include <ulib/format.h>
+#include <ulib/string.h>
 
-#include <ulib/wchar.h>
+#include <stdio.h>
 
 namespace futile
 {
-
     FILE *OpenFileF(const fs::path &path, const char *rr)
     {
 #ifdef _WIN32
@@ -48,9 +48,23 @@ namespace futile
             std::fclose(mHandle);
     }
 
+    void File::close()
+    {
+        if (mHandle)
+        {
+            std::fclose(mHandle);
+            mHandle = nullptr;
+        }
+    }
+
     size_t File::read(void *buf, size_t size) { return std::fread(buf, 1, size, mHandle); }
     size_t File::write(const void *buf, size_t size) { return std::fwrite(buf, 1, size, mHandle); }
     size_t File::size() { return FileSize(mHandle); }
+
+    void File::fclose_unsafe()
+    {
+        std::fclose(mHandle);
+    }
 
     File open(const fs::path &path, const char *rr)
     {
