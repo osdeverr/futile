@@ -90,6 +90,8 @@ namespace futile
             return ContainerT{split.begin(), split.end()};
         }
 
+        void flush();
+
     private:
         void fclose_unsafe();
 

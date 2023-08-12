@@ -61,15 +61,14 @@ namespace futile
     size_t File::write(const void *buf, size_t size) { return std::fwrite(buf, 1, size, mHandle); }
     size_t File::size() { return FileSize(mHandle); }
 
-    void File::fclose_unsafe()
-    {
-        std::fclose(mHandle);
-    }
+    void File::fclose_unsafe() { std::fclose(mHandle); }
 
     File open(const fs::path &path, const char *rr)
     {
         File ff(path, rr);
         return ff;
     }
+
+    void File::flush() { std::fflush(mHandle); }
 
 } // namespace futile
